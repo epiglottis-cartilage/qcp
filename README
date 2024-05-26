@@ -1,0 +1,6 @@
+You need install 
+fastqc
+fastp
+aria2c
+
+pip install requests
