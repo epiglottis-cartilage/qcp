@@ -1,4 +1,4 @@
-#!/ust/bin/python3
+#!/bin/python3 
 
 # 从want.txt下载fastq.gz文件
 
@@ -61,6 +61,6 @@ if __name__ == "__main__":
                 os.system(f"aria2c -x 8 ftp://{ftp} -o {name_ftp}")
                 os.system(f"mv {name_ftp} {sample}/{srr}/{name_full}")
                 os.system(
-                    f"cd {sample}/{srr}/ && ../../1_first_analyze.py {name_full} &")
+                    f"cd {sample}/{srr}/ && python3 ../../1_first_analyze.py {name_full} &")
 
         print()
