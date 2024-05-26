@@ -123,7 +123,7 @@ for sample in samples:
             cmds.append(f'cd {sample}/merged && fastp -q {q} -l {l} -i {file1} -I {
                         file2} -o fastp_{file1} -O fastp_{file2} -w 8 {a0} {a1} {a2} > 2.log 2>&1')
             cmds.append(
-                f'cd {sample}/merged && fastqc -t 8 fastp_{file1} fastp_{file2} >> 4.log 2>&1 &')
+                f'cd {sample}/merged && fastqc -t 8 fastp_{file1} fastp_{file2} > 4.log 2>&1 &')
 
         end.pop('1')
         end.pop('2')
