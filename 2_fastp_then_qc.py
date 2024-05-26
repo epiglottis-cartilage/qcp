@@ -1,4 +1,4 @@
-#!/bin/python3 
+#!/bin/python3
 
 import os
 import re
@@ -38,15 +38,11 @@ for sample in samples:
             report = open(f'./{sample}/{srr}/{srr}_fastqc.html').read()
 
             overrepresented = re.findall(r'[ATCGU]{15,}', report)
-            assert len(overrepresented) <= 1
 
-            if len(overrepresented) == 1:
-                overrepresented = overrepresented[0]
-                print(f'{overrepresented=}')
-                # fastp
-                cmds.append(f'cd {sample}/{srr} && fastp -q {q} -l {l} -i {srr}.fastq.gz -o fastp_{srr}.fastq.gz -a {overrepresented} -w 8 > 2.log 2>&1')
-            else:
-                cmds.append(f'cd {sample}/{srr} && fastp -q {q} -l {l} -i {srr}.fastq.gz -o fastp_{srr}.fastq.gz -w 8 > 2.log 2>&1')
+            a = ' '.join([f"-a {each}" for each in overrepresented])
+
+            cmds.append(f'cd {sample}/{srr} && fastp -q {q} -l {l} -i {
+                        srr}.fastq.gz -o fastp_{srr}.fastq.gz {a} -w 8 > 2.log 2>&1')
 
             # fastqc
             cmds.append(
@@ -107,15 +103,16 @@ for sample in samples:
             file1 = f"{sample}_merged_1.fastq.gz"
             file2 = f"{sample}_merged_2.fastq.gz"
 
-            assert len(overrepresented['1']) <= 1
-            assert len(overrepresented['2']) <= 1
+            a1 = ' '.join([f"-a {each}" for each in overrepresented['1']])
+            a2 = ' '.join(
+                [f"--adapter_sequence_r2 {each}" for each in overrepresented['2']])
 
-            a1 = f"-a {list(overrepresented['1'])[0]}" if len(overrepresented['1']) == 1 else ''
-            a2 = f"--adapter_sequence_r2 {list(overrepresented['1'])[0]}" if len(overrepresented['1']) == 1 else ''
-
-            cmds.append(f'cd {sample}/merged && fastqc -t 8 {file1} {file2} > 3.log 2>&1 &')
-            cmds.append(f'cd {sample}/merged && fastp -q {q} -l {l} -i {file1} -I {file2} -o fastp_{file1} -O fastp_{file2} -w 8 {a1} {a2} > 2.log 2>&1')
-            cmds.append(f'cd {sample}/merged && fastqc -t 8 fastp_{file1} fastp_{file2} >> 4.log 2>&1 &')
+            cmds.append(
+                f'cd {sample}/merged && fastqc -t 8 {file1} {file2} > 3.log 2>&1 &')
+            cmds.append(f'cd {sample}/merged && fastp -q {q} -l {l} -i {file1} -I {
+                        file2} -o fastp_{file1} -O fastp_{file2} -w 8 {a1} {a2} > 2.log 2>&1')
+            cmds.append(
+                f'cd {sample}/merged && fastqc -t 8 fastp_{file1} fastp_{file2} >> 4.log 2>&1 &')
 
         end.pop('1')
         end.pop('2')
@@ -123,11 +120,12 @@ for sample in samples:
         # 没有分 12 的情况，未测试
         for (id, files) in end.items():
             raise "未知的情况"
-        
+
             assert len(files) <= 1
             assert len(overrepresented[id]) <= 1
 
-            a = f"-a {list(overrepresented[id])[0]}" if len(overrepresented[id]) == 1 else ''
+            a = f"-a {list(overrepresented[id])[0]
+                      }" if len(overrepresented[id]) == 1 else ''
 
             file = f"{sample}_merged_{id}.fastq.gz"
 
