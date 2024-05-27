@@ -8,6 +8,11 @@ fix_q = None
 fix_l = None
 pop_browser = True
 
+if input("use TruSeq3-SE.fa? y/N?") == 'y':
+    a0 = '--adapter_fasta ../../adapters/TruSeq3-SE.fa'
+else:
+    a0 = ''
+
 if input("fixed q l value? y/N?") == 'y':
     while True:
         fix_q = input("q:").strip()
@@ -51,9 +56,6 @@ for sample in samples:
                     l = input(f'-l:')
                     if input(f'q={q} l={l} (OK? Y/n)') == '':
                         break
-
-
-            a0 = '--adapter_fasta ../../adapters/TruSeq3-SE.fa'
 
             cmds.append(f'cd {sample}/{srr} && fastp -q {q} -l {l} -i {srr}.fastq.gz -o fastp_{srr}.fastq.gz {a0} -w 8 > p.log 2>&1')
 
@@ -113,7 +115,6 @@ for sample in samples:
             file1 = f"{sample}_merged_1.fastq.gz"
             file2 = f"{sample}_merged_2.fastq.gz"
 
-            a0 = '--adapter_fasta ../../adapters/TruSeq3-SE.fa'
 
             cmds.append(f'cd {sample}/merged && fastqc -t 8 {file1} {file2} > qc1.log 2>&1 &')
             cmds.append(f'cd {sample}/merged && fastp -q {q} -l {l} -i {file1} -I {file2} -o fastp_{file1} -O fastp_{file2} -w 8 {a0} > p.log 2>&1')
