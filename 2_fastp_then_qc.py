@@ -1,12 +1,11 @@
 #!/bin/python3
 
 import os
-import re
 
 
 fix_q = None
 fix_l = None
-pop_browser = True
+pop_browser = False
 
 if input("use TruSeq3-SE.fa? y/N?") == 'y':
     a0 = '--adapter_fasta ../../adapters/TruSeq3-SE.fa'
