@@ -2,4 +2,4 @@
 /PRJNA*
 /*.gz
 /res
-/*.txt
+./*.txt
