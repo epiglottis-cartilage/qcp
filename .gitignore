@@ -1,4 +1,5 @@
 /GSM*
 /PRJNA*
 /*.gz
-/RES
+/res
+/*.txt
