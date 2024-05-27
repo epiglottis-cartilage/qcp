@@ -57,10 +57,12 @@ if __name__ == "__main__":
                 # 当同名文件存在时跳过
                 if os.path.exists(f"{sample}/{srr}/{name_full}"):
                     print('[skip]', end='')
+                    if not os.path.exists(f"{sample}/{srr}/qc.log"):
+                        print('[but qc]', end='')
+                        os.system(f"cd {sample}/{srr}/ && python3 ../../1_first_analyze.py {name_full} &")
                     continue
                 os.system(f"aria2c -x 8 ftp://{ftp} -o {name_ftp}")
                 os.system(f"mv {name_ftp} {sample}/{srr}/{name_full}")
-                os.system(
-                    f"cd {sample}/{srr}/ && python3 ../../1_first_analyze.py {name_full} &")
+                os.system(f"cd {sample}/{srr}/ && python3 ../../1_first_analyze.py {name_full} &")
 
         print()
